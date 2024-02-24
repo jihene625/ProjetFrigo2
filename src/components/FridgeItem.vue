@@ -1,20 +1,23 @@
 <!-- FridgeItem.vue -->
 <template>
   <li>
-    {{ product.pourAfficher() }}
     <div>
       <img :src="product.photo" alt="Product Photo" />
-      <p>{{ product.name }} - Quantité: {{ product.quantity }}</p>
+      <p>{{ product.nom }} - Quantité: {{ product.qte }}</p>
     </div>
     <button @click="() => deletep(product.id)">Supprimer</button>
-    <button @click="() => addp(chose.id)">ajouter</button>
+    <button @click="ajoutqte(product.id)">+</button>
+    <button @click="supprqte(product.id)">-</button>
   </li>
 </template>
 
 <script setup>
-defineProps(["product", "indexp", "deletep", "addp" ]);
-
-
+const { product, deletep, ajoutqte, supprqte } = defineProps([
+  'product',
+  'deletep',
+  'ajoutqte',
+  'supprqte',
+]);
 </script>
 
 <style scoped></style>

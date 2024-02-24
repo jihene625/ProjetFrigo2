@@ -1,20 +1,25 @@
 // Product.js
 export default class Product {
-    constructor(id, name, quantity, photo) {
+    constructor(id, nom, qte, photo) {
       this._id = id;
-      this._name = name;
-      this._quantity = quantity;
+      this._nom = nom;
+      this._qte = qte;
+      this._photo = photo;
     }
   
     get id() {
       return this._id;
     }
-    get name() {
-      return this._name;
+    get nom() {
+      return this._nom;
     }
   
-    get quantity() {
-      return this._quantity;
+    get qte() {
+      return this._qte;
+    }
+
+    get photo() {
+      return this._photo;
     }
 
   }

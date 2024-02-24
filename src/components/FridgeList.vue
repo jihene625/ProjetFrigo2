@@ -1,88 +1,144 @@
 <template>
-    <div>
-      <h2>Liste des Produits dans le Frigo</h2>
-      <AddProductForm @addp="addProduct"></AddProductForm>
-      <ul>
-        <FridgeItem
-          v-for="(product, index) of productList"
+  <div>
+    <h2>Liste des Produits dans le Frigo</h2>
+    <SearchForm @search="updateSearchCriteria"></SearchForm>
+    <ul>
+      <div v-if="newliste.length === 0">
+      <FridgeItem v-for="product in productList"
           :key="product.id"
           :product="product"
-          :indexp="index"
           :deletep="deleteProduct"
-          :addp="addProduct"
-        />
-      </ul>
-    </div>
-  </template>
+          :ajoutqte="ajoutqteProduct"
+          :supprqte="supprqteProduct" />
+      </div>
+      <div v-else>
+        <FridgeItem v-for="product in newliste"
+          :key="product.id"
+          :product="product"
+          :deletep="deleteProduct"
+          :ajoutqte="ajoutqteProduct"
+          :supprqte="supprqteProduct" />
+      </div>
+    </ul>
+  </div>
+</template>
   
-  <script setup>
-  import FridgeItem from './FridgeItem.vue';
-  import { ref } from "vue";
-  import { onMounted, reactive } from "vue";
-  import Product from '@/Product';
-  const productList = ref([]);
-  
-  const url='https://webmmi.iut-tlse3.fr/~pecatte/frigo/public/19/produits'
-    function Liste(){
-      fetch(url)
-    .then( (response) => {
-        return response.json()
-    })
-    .then((productList) => {
-        console.log(productList)
-        for (let pr of productList){
-            productList.push(new Product(pr.id, pr.name, pr.quantity))
-        }
-    })
-    .catch( (error) =>{
-        console.log(error)})
-}
-onMounted(() => {
-    Liste()
-})
-  
-    function deleteProduct (productId) {
-     const fetchOptions = {
-        method: 'DELETE',
-      };
+<script setup>
+import FridgeItem from './FridgeItem.vue';
+import { onMounted, reactive, ref } from "vue";
+import Product from '@/Product';
+import SearchForm from './SearchForm.vue';
 
-     fetch(url+ "/"+ productId,fetchOptions)
-     .then((response)=>{
-        return response.json();
+const productList = reactive([]);
+const motcle = ref("");
+const newliste = reactive([]);
+const url = 'https://webmmi.iut-tlse3.fr/~pecatte/frigo/public/19/produits'
+
+function Liste() {
+  const fetchOptions = { method: "GET" };
+  fetch(url, fetchOptions)
+    .then((response) => {
+      return response.json()
     })
     .then((dataJSON) => {
-        console.log(dataJSON);
-        Liste()
-        fetchProducts();
- })
- .catch((error)=> console.log(error));
+      console.log(dataJSON)
+      productList.splice(0, productList.length);
+      for (let pr of dataJSON) {
+        productList.push(new Product(pr.id, pr.nom, pr.qte, pr.photo))
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+onMounted(() => {
+  Liste()
+})
+
+function deleteProduct(productId) {
+  const fetchOptions = {
+    method: 'DELETE',
+  };
+
+  fetch(url + "/" + productId, fetchOptions)
+    .then((response) => {
+      return response.json();
+    })
+    .then((dataJSON) => {
+      console.log(dataJSON);
+      Liste()
+      fetchProducts();
+    })
+    .catch((error) => console.log(error));
 }
 
-function addProduct(l) {
-    let myHeaders = new Headers();
- myHeaders.append("Content-Type", "application/json");
- const fetchOptions = {
- method: "POST",
- headers: myHeaders,
- body: JSON.stringify({ libelle : l }),
- };
- fetch(url,fetchOptions)
- .then((response)=>{
-    return response.json();
- })
- .then((dataJSON) => {
-        console.log(dataJSON);
- })
- .catch((error)=> console.log(error));
+function updateProduct(productId, updatedData) {
+  const product = productList.find((p) => p.id === productId);
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: product.id,
+      nom: product.nom,
+      qte: updatedData.qte, // Assuming you want to update the quantity
+      photo: product.photo,
+    }),
+  };
 
-  // -- il faut créer une nouvelle "chsoe" instance de la classe
-  productList.push(new Product(l));
+  return fetch(url, fetchOptions)
+    .then((response) => response.json())
+    .then((dataJSON) => {
+      console.log(dataJSON);
+      Liste(); // Assuming it should be Liste() instead of fetchProducts()
+      return dataJSON.status;
+    })
+    .catch((error) => {
+      console.log(error);
+      return 0;
+    });
 }
 
+function ajoutqteProduct(productId) {
+  const product = productList.find((p) => p.id === productId);
+  const updatedData = { qte: product.qte + 1 };
 
-  </script>
+  updateProduct(productId, updatedData);
+}
+
+function supprqteProduct(productId) {
+  const product = productList.find((p) => p.id === productId);
+  if (product.qte > 0) {
+    const updatedData = { qte: product.qte - 1 };
+
+    updateProduct(productId,updatedData);
+  }
+}
+
+const updateSearchCriteria = (newCritere) => {
+    motcle.value = newCritere;
+    searchElements();
+};
+
+function searchElements() {
+    const fetchOptions = { method: "GET" };
+    fetch(url + "?search=" + motcle.value, fetchOptions)
+        .then((response) => response.json())
+        .then((dataJSON) => {
+            newliste.splice(0, newliste.length);
+            for (let p of dataJSON) {
+                newliste.push(new Product(p.id, p.nom, p.qte, p.photo));
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
+</script>
   
-  <style scoped>
-  /* Ajoutez vos styles ici */
-  </style>
+<style scoped>
+/* Ajoutez vos styles ici */
+</style>
   
