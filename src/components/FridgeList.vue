@@ -1,9 +1,11 @@
+<!-- FridgeList.vue -->
 <template>
+
   <div>
     <h2>Liste des Produits dans le Frigo</h2>
     <SearchForm @search="updateSearchCriteria"></SearchForm>
     <ul>
-      <div v-if="newliste.length === 0">
+      <div class="cardContent" v-if="newliste.length === 0">
       <FridgeItem v-for="product in productList"
           :key="product.id"
           :product="product"
@@ -82,7 +84,7 @@ function updateProduct(productId, updatedData) {
     body: JSON.stringify({
       id: product.id,
       nom: product.nom,
-      qte: updatedData.qte, // Assuming you want to update the quantity
+      qte: updatedData.qte, 
       photo: product.photo,
     }),
   };
@@ -91,7 +93,7 @@ function updateProduct(productId, updatedData) {
     .then((response) => response.json())
     .then((dataJSON) => {
       console.log(dataJSON);
-      Liste(); // Assuming it should be Liste() instead of fetchProducts()
+      Liste(); 
       return dataJSON.status;
     })
     .catch((error) => {
@@ -99,13 +101,12 @@ function updateProduct(productId, updatedData) {
       return 0;
     });
 }
+ function ajoutqteProduct(productId) {
+   const product = productList.find((p) => p.id === productId);
+   const updatedData = { qte: product.qte + 1 };
 
-function ajoutqteProduct(productId) {
-  const product = productList.find((p) => p.id === productId);
-  const updatedData = { qte: product.qte + 1 };
-
-  updateProduct(productId, updatedData);
-}
+   updateProduct(productId, updatedData);
+ }
 
 function supprqteProduct(productId) {
   const product = productList.find((p) => p.id === productId);
@@ -139,6 +140,23 @@ function searchElements() {
 </script>
   
 <style scoped>
-/* Ajoutez vos styles ici */
+h2 {
+  color: #c49d9d;
+  margin-bottom: 30px;
+  text-align: center;
+  margin-top:20px;
+}
+
+ul {
+  padding: 0;
+  list-style:none;
+}
+.cardContent{
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  padding:15px;
+}
+
 </style>
   

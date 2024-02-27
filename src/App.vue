@@ -1,3 +1,4 @@
+<!-- App.vue -->
 <template>
     <h3>Application Gestion Frigo</h3>
     <AddProductForm @addPr="addProduct" />
@@ -33,6 +34,7 @@ const addProduct = (nom, qte, photo) => {
         .then(response => response.json())
         .then(dataJSON => {
             console.log(dataJSON);
+            location.reload();
         })
         .catch((error) => {
             console.error(error);
@@ -41,10 +43,14 @@ const addProduct = (nom, qte, photo) => {
 
 </script>
 
-<style>
+
+<style scoped>
 h3 {
     margin: 15px 0 0;
     font-size: 30px;
-    color: rgba(52, 52, 155, 0.73);
+    color: #f44336;
+    text-align: center;
+    font-family:sans-serif ;
 }
+
 </style>
