@@ -1,6 +1,12 @@
 <!-- App.vue -->
 <template>
-    <h3>Application Gestion Frigo</h3>
+    <div class="navbar">
+     <a class="navbar-brand" href="#">
+    <header><img src="./assets/frigoIcon.png" class="photo" alt="">Application Gestion Frigo</header>
+    
+  </a>
+</div>
+    
     <AddProductForm @addPr="addProduct" />
     <FridgeList />
 </template>
@@ -45,12 +51,25 @@ const addProduct = (nom, qte, photo) => {
 
 
 <style scoped>
-h3 {
-    margin: 15px 0 0;
-    font-size: 30px;
-    color: #f44336;
+header {
+    margin: 0px 0 0;
+    font-size: 25px;
+    color: #ffffff;
     text-align: center;
     font-family:sans-serif ;
+    margin-top: -10px
+    
+}
+
+.photo{ 
+    width: 50px;
+    height:50px;
+    
+}
+
+.navbar{
+    background-color: #c8c0bf;
+    height: 50px;
 }
 
 </style>

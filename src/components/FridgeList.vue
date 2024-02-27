@@ -13,7 +13,7 @@
           :ajoutqte="ajoutqteProduct"
           :supprqte="supprqteProduct" />
       </div>
-      <div v-else>
+      <div class="cardContent" v-else>
         <FridgeItem v-for="product in newliste"
           :key="product.id"
           :product="product"
@@ -154,8 +154,12 @@ ul {
 .cardContent{
   display:flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   padding:15px;
+  flex-direction: row;
+}
+.cardContent .card {
+  margin: 24px;
 }
 
 </style>

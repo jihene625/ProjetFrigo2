@@ -32,6 +32,7 @@
     color: #c49d9d;
     margin-bottom: 15px;
     text-align: center;
+    padding-top: 50px;
   }
 
   form {

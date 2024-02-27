@@ -1,7 +1,5 @@
 <!-- FridgeItem.vue -->
 <template>
-
-
   <div class="card" style="width: 15rem;">
   <img :src="product.photo" class="card-img-top" alt="...">
   <div class="card-body">
