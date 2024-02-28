@@ -1,4 +1,4 @@
-// Product.js
+// Product.js/
 export default class Product {
     constructor(id, nom, qte, photo) {
       this._id = id;
